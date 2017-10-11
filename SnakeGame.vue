@@ -32,6 +32,7 @@
 <script>
 	const modal = weex.requireModule('modal')
 	var timer = null
+	var highlightTimer = null
 	export default {
 		computed: {
 			gridSize: function () {
@@ -183,6 +184,18 @@
 				clearInterval(timer)
 				timer = null
 			},
+			stopHighlight: function () {
+				clearInterval(highlightTimer)
+				highlightTimer = null
+			},
+			startHighlight: function () {
+				this.stopHighlight()
+				var self = this
+				highlightTimer = setInterval(function () {
+					self.headerHighlight = !self.headerHighlight
+					self.foodHighlight = !self.foodHighlight
+				}, 333)
+			},
 			randomFood: function () {
 				var emptyGrid = []
 				for (var i=1; i<this.rowNumber-1; i++) {
@@ -244,6 +257,7 @@
 				this.resetSnake()
 				this.startWalk()
 				this.randomFood()
+				this.startHighlight()
 			}
 		},
 		created: function () {
@@ -251,6 +265,7 @@
 		},
 		beforeDestroy: function () {
 			this.stopWalk()
+			this.stopHighlight()
 		}
 	}
 	function toast(text, duration) {
